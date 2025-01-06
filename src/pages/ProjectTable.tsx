@@ -357,12 +357,24 @@ const ProjectTable: React.FC = () => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Project ID</TableCell>
-                        <TableCell>Project Name</TableCell>
-                        <TableCell>Start Date</TableCell>
-                        <TableCell>End Date</TableCell>
-                        <TableCell>Project Manager</TableCell>
-                        <TableCell>Actions</TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          Project ID
+                        </TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          Project Name
+                        </TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          Start Date
+                        </TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          End Date
+                        </TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          Project Manager
+                        </TableCell>
+                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                          Actions
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -402,12 +414,24 @@ const ProjectTable: React.FC = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell>Project ID</TableCell>
-                      <TableCell>Project Name</TableCell>
-                      <TableCell>Start Date</TableCell>
-                      <TableCell>End Date</TableCell>
-                      <TableCell>Project Manager</TableCell>
-                      <TableCell>Edit</TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Project ID
+                      </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Project Name
+                      </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Start Date
+                      </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        End Date
+                      </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Project Manager
+                      </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Edit
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

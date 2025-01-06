@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 body {
+  background-color: #e5e7eb !important;
   margin: 0;
   font-family: Arial, sans-serif;
+}
+
+main {
+  background-color: #e5e7eb !important;
+}
+
+.MuiDrawer-docked,
+.css-1lwhjos-MuiPaper-root-MuiDrawer-paper {
+  background-color: #1c2434 !important;
+  color: #fff !important;
+  font-size: 16px;
+  text-transform: capitalize !important;
 }
