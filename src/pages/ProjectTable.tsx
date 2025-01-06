@@ -34,6 +34,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "../components/SearchBar";
 
 interface Project {
   id: string;
@@ -71,6 +72,7 @@ const ProjectTable: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,7 +94,11 @@ const ProjectTable: React.FC = () => {
       });
   }, []);
 
-  const currentProjects = projects.slice(
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentProjects = filteredProjects.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -346,6 +352,7 @@ const ProjectTable: React.FC = () => {
       >
         <Toolbar />
         {error && <div style={{ color: "red" }}>{error}</div>}
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         {showForm ? (
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6">Create New Project</Typography>
@@ -474,7 +481,7 @@ const ProjectTable: React.FC = () => {
                   </Table>
                   <TablePagination
                     component="div"
-                    count={projects.length}
+                    count={filteredProjects.length}
                     page={page}
                     onPageChange={handleChangePage}
                     rowsPerPage={rowsPerPage}
