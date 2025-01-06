@@ -32,6 +32,7 @@ import axios from "axios";
 import MenuIcon from "@mui/icons-material/Menu";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
 
 interface Project {
   id: string;
@@ -67,6 +68,7 @@ const ProjectTable: React.FC = () => {
   const [showProjects, setShowProjects] = useState<boolean>(true);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -217,6 +219,10 @@ const ProjectTable: React.FC = () => {
     if (menu === "Projects") {
       setShowProjects(true);
       setSelectedProject(null);
+    } else if (menu === "Teams") {
+      navigate("/teams");
+    } else if (menu === "Settings") {
+      navigate("/settings");
     } else {
       setShowProjects(false);
       setSelectedProject(null);
