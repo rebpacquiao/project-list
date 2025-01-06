@@ -162,6 +162,7 @@ const ProjectTable: React.FC = () => {
   const handleFavoriteProjectClick = (project: Project) => {
     setSelectedProject(project);
     setShowProjects(false);
+    setShowForm(false);
   };
 
   const handleMenuClick = (menu: string) => {
@@ -172,6 +173,7 @@ const ProjectTable: React.FC = () => {
       setShowProjects(false);
       setSelectedProject(null);
     }
+    setShowForm(false);
   };
 
   return (
@@ -231,7 +233,10 @@ const ProjectTable: React.FC = () => {
               ))}
               <ListItem component="li" onClick={() => setShowForm(true)}>
                 <ButtonBase sx={{ width: "100%" }}>
-                  <ListItemText primary="Add New" />
+                  <ListItemText
+                    primary="Add New"
+                    sx={{ color: "primary.main" }}
+                  />
                 </ButtonBase>
               </ListItem>
             </List>
@@ -244,7 +249,7 @@ const ProjectTable: React.FC = () => {
       >
         <Toolbar />
         {error && <div style={{ color: "red" }}>{error}</div>}
-        {showForm && (
+        {showForm ? (
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6">Create New Project</Typography>
             <TextField
@@ -300,76 +305,79 @@ const ProjectTable: React.FC = () => {
               Create Project
             </Button>
           </Box>
-        )}
-        {showProjects && (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Project ID</TableCell>
-                  <TableCell>Project Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Project Manager</TableCell>
-                  <TableCell>Edit</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {projects.map((project) => (
-                  <TableRow key={project.id}>
-                    <TableCell>{project.id}</TableCell>
-                    <TableCell>{project.name}</TableCell>
-                    <TableCell>{project.startDate}</TableCell>
-                    <TableCell>{project.endDate}</TableCell>
-                    <TableCell>{project.manager}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleOpen(project)}
-                      >
-                        Edit
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        )}
-        {selectedProject && !showProjects && (
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Project ID</TableCell>
-                  <TableCell>Project Name</TableCell>
-                  <TableCell>Start Date</TableCell>
-                  <TableCell>End Date</TableCell>
-                  <TableCell>Project Manager</TableCell>
-                  <TableCell>Edit</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow key={selectedProject.id}>
-                  <TableCell>{selectedProject.id}</TableCell>
-                  <TableCell>{selectedProject.name}</TableCell>
-                  <TableCell>{selectedProject.startDate}</TableCell>
-                  <TableCell>{selectedProject.endDate}</TableCell>
-                  <TableCell>{selectedProject.manager}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleOpen(selectedProject)}
-                    >
-                      Edit
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+        ) : (
+          <>
+            {showProjects && (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Project ID</TableCell>
+                      <TableCell>Project Name</TableCell>
+                      <TableCell>Start Date</TableCell>
+                      <TableCell>End Date</TableCell>
+                      <TableCell>Project Manager</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {projects.map((project) => (
+                      <TableRow key={project.id}>
+                        <TableCell>{project.id}</TableCell>
+                        <TableCell>{project.name}</TableCell>
+                        <TableCell>{project.startDate}</TableCell>
+                        <TableCell>{project.endDate}</TableCell>
+                        <TableCell>{project.manager}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => handleOpen(project)}
+                          >
+                            Edit
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+            {selectedProject && !showProjects && (
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Project ID</TableCell>
+                      <TableCell>Project Name</TableCell>
+                      <TableCell>Start Date</TableCell>
+                      <TableCell>End Date</TableCell>
+                      <TableCell>Project Manager</TableCell>
+                      <TableCell>Edit</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow key={selectedProject.id}>
+                      <TableCell>{selectedProject.id}</TableCell>
+                      <TableCell>{selectedProject.name}</TableCell>
+                      <TableCell>{selectedProject.startDate}</TableCell>
+                      <TableCell>{selectedProject.endDate}</TableCell>
+                      <TableCell>{selectedProject.manager}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleOpen(selectedProject)}
+                        >
+                          Edit
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </>
         )}
         <Modal open={open} onClose={handleClose}>
           <Box
