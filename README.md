@@ -57,13 +57,10 @@ This will generate optimized files in the `dist` directory.
 
 - `src/`: Contains the source code for the application.
   - `components/`: Contains React components.
+  - `pages/`: ProjectTable.tsx: Component for displaying and managing the project list.
   - `styles/`: Contains CSS styles.
   - `index.tsx`: Entry point of the application.
 - `public/`: Contains the static HTML file.
 - `package.json`: Configuration file for npm.
 - `tsconfig.json`: TypeScript configuration file.
 - `webpack.config.js`: Webpack configuration file.
-
-### License
-
-This project is licensed under the MIT License.

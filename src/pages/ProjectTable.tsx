@@ -29,6 +29,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
 import MenuIcon from "@mui/icons-material/Menu";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Project {
   id: string;
@@ -393,7 +395,7 @@ const ProjectTable: React.FC = () => {
                     Add New
                   </Button>
                 </Box>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
                   <Table>
                     <TableHead>
                       <TableRow>
@@ -426,21 +428,18 @@ const ProjectTable: React.FC = () => {
                           <TableCell>{project.endDate}</TableCell>
                           <TableCell>{project.manager}</TableCell>
                           <TableCell>
-                            <Button
-                              variant="contained"
+                            <IconButton
                               color="primary"
                               onClick={() => handleOpen(project)}
                             >
-                              Edit
-                            </Button>
-                            <Button
-                              variant="contained"
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
                               color="error"
                               onClick={() => handleDeleteOpen(project)}
-                              sx={{ ml: 1 }}
                             >
-                              Delete
-                            </Button>
+                              <DeleteIcon />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -450,7 +449,7 @@ const ProjectTable: React.FC = () => {
               </>
             )}
             {selectedProject && !showProjects && (
-              <TableContainer component={Paper}>
+              <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
                 <Table>
                   <TableHead>
                     <TableRow>
@@ -482,21 +481,18 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{selectedProject.endDate}</TableCell>
                       <TableCell>{selectedProject.manager}</TableCell>
                       <TableCell>
-                        <Button
-                          variant="contained"
+                        <IconButton
                           color="primary"
                           onClick={() => handleOpen(selectedProject)}
                         >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="secondary"
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
                           onClick={() => handleDeleteOpen(selectedProject)}
-                          sx={{ ml: 1 }}
                         >
-                          Delete
-                        </Button>
+                          <DeleteIcon />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   </TableBody>
