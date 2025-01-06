@@ -43,6 +43,14 @@ npm start
 
 This will launch the application in your default web browser at `http://localhost:3000`.
 
+### Run the Server side
+
+open new visual studio window then type this command to run the server side
+
+```
+ json-server --watch db.json --port 3001
+```
+
 ### Building for Production
 
 To create a production build of the application, run:

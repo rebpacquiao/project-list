@@ -23,6 +23,7 @@ import {
   Checkbox,
   FormControlLabel,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -65,6 +66,7 @@ const ProjectTable: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showProjects, setShowProjects] = useState<boolean>(true);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -107,6 +109,7 @@ const ProjectTable: React.FC = () => {
 
   const handleDelete = () => {
     if (selectedProject) {
+      setLoading(true);
       const apiUrl = process.env.REACT_APP_API_URL;
       axios
         .delete(`${apiUrl}/projects/${selectedProject.id}`)
@@ -123,6 +126,9 @@ const ProjectTable: React.FC = () => {
         })
         .catch((error) => {
           setError("Failed to delete project");
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
@@ -147,6 +153,7 @@ const ProjectTable: React.FC = () => {
 
   const handleSave = () => {
     if (selectedProject) {
+      setLoading(true);
       const apiUrl = process.env.REACT_APP_API_URL;
       axios
         .put(`${apiUrl}/projects/${selectedProject.id}`, selectedProject)
@@ -160,6 +167,9 @@ const ProjectTable: React.FC = () => {
         })
         .catch((error) => {
           setError("Failed to update project");
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
@@ -564,6 +574,7 @@ const ProjectTable: React.FC = () => {
             <Button variant="contained" color="primary" onClick={handleSave}>
               Save
             </Button>
+            {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
           </Box>
         </Modal>
         <Modal open={deleteOpen} onClose={handleDeleteClose}>
@@ -597,6 +608,7 @@ const ProjectTable: React.FC = () => {
             >
               Cancel
             </Button>
+            {loading && <CircularProgress size={24} sx={{ mt: 2 }} />}
           </Box>
         </Modal>
       </Box>
