@@ -24,6 +24,7 @@ import {
   FormControlLabel,
   IconButton,
   CircularProgress,
+  TablePagination,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -68,6 +69,8 @@ const ProjectTable: React.FC = () => {
   const [showProjects, setShowProjects] = useState<boolean>(true);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,6 +92,21 @@ const ProjectTable: React.FC = () => {
       });
   }, []);
 
+  const currentProjects = projects.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   const handleOpen = (project: Project) => {
     setSelectedProject(project);
     setOpen(true);
@@ -429,7 +447,7 @@ const ProjectTable: React.FC = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {projects.map((project) => (
+                      {currentProjects.map((project) => (
                         <TableRow key={project.id}>
                           <TableCell>{project.id}</TableCell>
                           <TableCell>{project.name}</TableCell>
@@ -454,6 +472,15 @@ const ProjectTable: React.FC = () => {
                       ))}
                     </TableBody>
                   </Table>
+                  <TablePagination
+                    component="div"
+                    count={projects.length}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={rowsPerPage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    rowsPerPageOptions={[5, 10, 25]}
+                  />
                 </TableContainer>
               </>
             )}
