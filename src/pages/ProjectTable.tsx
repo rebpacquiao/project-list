@@ -219,13 +219,6 @@ const ProjectTable: React.FC = () => {
     if (menu === "Projects") {
       setShowProjects(true);
       setSelectedProject(null);
-    } else if (menu === "Teams") {
-      navigate("/teams");
-    } else if (menu === "Settings") {
-      navigate("/settings");
-    } else {
-      setShowProjects(false);
-      setSelectedProject(null);
     }
     setShowForm(false);
   };
@@ -237,7 +230,7 @@ const ProjectTable: React.FC = () => {
   const drawer = (
     <Box sx={{ overflow: "auto" }}>
       <List>
-        {["Dashboard", "Projects", "Teams", "Settings"].map((text, index) => (
+        {["Dashboard", "Projects"].map((text, index) => (
           <ListItem
             key={text}
             component="li"
