@@ -22,11 +22,13 @@ import {
   ButtonBase,
   Checkbox,
   FormControlLabel,
+  IconButton,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
+import MenuIcon from "@mui/icons-material/Menu";
 
 interface Project {
   id: string;
@@ -60,6 +62,7 @@ const ProjectTable: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [showForm, setShowForm] = useState<boolean>(false);
   const [showProjects, setShowProjects] = useState<boolean>(true);
+  const [mobileOpen, setMobileOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -209,6 +212,47 @@ const ProjectTable: React.FC = () => {
     setShowForm(false);
   };
 
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawer = (
+    <Box sx={{ overflow: "auto" }}>
+      <List>
+        {["Dashboard", "Projects", "Teams", "Settings"].map((text, index) => (
+          <ListItem
+            key={text}
+            component="li"
+            onClick={() => handleMenuClick(text)}
+          >
+            <ButtonBase sx={{ width: "100%" }}>
+              <ListItemText primary={text} sx={{ textAlign: "left" }} />
+            </ButtonBase>
+          </ListItem>
+        ))}
+      </List>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="h6">Favorite Projects</Typography>
+        <List>
+          {favoriteProjects.map((project) => (
+            <ListItem
+              key={project.id}
+              component="li"
+              onClick={() => handleFavoriteProjectClick(project)}
+            >
+              <ButtonBase sx={{ width: "100%" }}>
+                <ListItemText
+                  primary={project.name}
+                  sx={{ textAlign: "left" }}
+                />
+              </ButtonBase>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Box>
+  );
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -217,60 +261,56 @@ const ProjectTable: React.FC = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: "none" } }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" noWrap component="div">
             Project Dashboard
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          [`& .MuiDrawer-paper`]: {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
+      <Box
+        component="nav"
+        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        aria-label="mailbox folders"
       >
-        <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            {["Dashboard", "Projects", "Teams", "Settings"].map(
-              (text, index) => (
-                <ListItem
-                  key={text}
-                  component="li"
-                  onClick={() => handleMenuClick(text)}
-                >
-                  <ButtonBase sx={{ width: "100%" }}>
-                    <ListItemText primary={text} sx={{ textAlign: "left" }} />
-                  </ButtonBase>
-                </ListItem>
-              )
-            )}
-          </List>
-          <Box sx={{ p: 2 }}>
-            <Typography variant="h6">Favorite Projects</Typography>
-            <List>
-              {favoriteProjects.map((project) => (
-                <ListItem
-                  key={project.id}
-                  component="li"
-                  onClick={() => handleFavoriteProjectClick(project)}
-                >
-                  <ButtonBase sx={{ width: "100%" }}>
-                    <ListItemText
-                      primary={project.name}
-                      sx={{ textAlign: "left" }}
-                    />
-                  </ButtonBase>
-                </ListItem>
-              ))}
-            </List>
-          </Box>
-        </Box>
-      </Drawer>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+          sx={{
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
