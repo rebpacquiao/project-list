@@ -20,6 +20,8 @@ import {
   Toolbar,
   Typography,
   ButtonBase,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -33,6 +35,7 @@ interface Project {
   startDate: string;
   endDate: string;
   manager: string;
+  fav: boolean;
 }
 
 const drawerWidth = 240;
@@ -53,6 +56,9 @@ const ProjectTable: React.FC = () => {
     null
   );
   const [newProjectManager, setNewProjectManager] = useState<string>("");
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [showProjects, setShowProjects] = useState<boolean>(true);
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -65,9 +71,7 @@ const ProjectTable: React.FC = () => {
       .then((response) => {
         setProjects(response.data);
         setFavoriteProjects(
-          response.data.filter((project: Project) =>
-            project.name.startsWith("fav")
-          )
+          response.data.filter((project: Project) => project.fav)
         );
       })
       .catch((error) => {
@@ -133,12 +137,13 @@ const ProjectTable: React.FC = () => {
         : "",
       endDate: newProjectEndDate ? newProjectEndDate.format("YYYY-MM-DD") : "",
       manager: newProjectManager,
+      fav: isFavorite,
     };
     axios
       .post(`${apiUrl}/projects`, newProject)
       .then((response) => {
         setProjects([...projects, response.data]);
-        if (newProjectName.startsWith("fav")) {
+        if (isFavorite) {
           setFavoriteProjects([...favoriteProjects, response.data]);
         }
         setNewProjectName("");
@@ -146,6 +151,8 @@ const ProjectTable: React.FC = () => {
         setNewProjectStartDate(null);
         setNewProjectEndDate(null);
         setNewProjectManager("");
+        setIsFavorite(false);
+        setShowForm(false);
       })
       .catch((error) => {
         setError("Failed to create project");
@@ -154,6 +161,17 @@ const ProjectTable: React.FC = () => {
 
   const handleFavoriteProjectClick = (project: Project) => {
     setSelectedProject(project);
+    setShowProjects(false);
+  };
+
+  const handleMenuClick = (menu: string) => {
+    if (menu === "Projects") {
+      setShowProjects(true);
+      setSelectedProject(null);
+    } else {
+      setShowProjects(false);
+      setSelectedProject(null);
+    }
   };
 
   return (
@@ -185,7 +203,11 @@ const ProjectTable: React.FC = () => {
           <List>
             {["Dashboard", "Projects", "Teams", "Settings"].map(
               (text, index) => (
-                <ListItem key={text} component="li">
+                <ListItem
+                  key={text}
+                  component="li"
+                  onClick={() => handleMenuClick(text)}
+                >
                   <ButtonBase sx={{ width: "100%" }}>
                     <ListItemText primary={text} />
                   </ButtonBase>
@@ -207,6 +229,11 @@ const ProjectTable: React.FC = () => {
                   </ButtonBase>
                 </ListItem>
               ))}
+              <ListItem component="li" onClick={() => setShowForm(true)}>
+                <ButtonBase sx={{ width: "100%" }}>
+                  <ListItemText primary="Add New" />
+                </ButtonBase>
+              </ListItem>
             </List>
           </Box>
         </Box>
@@ -217,52 +244,100 @@ const ProjectTable: React.FC = () => {
       >
         <Toolbar />
         {error && <div style={{ color: "red" }}>{error}</div>}
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6">Create New Project</Typography>
-          <TextField
-            label="Project Name"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Description"
-            value={newProjectDescription}
-            onChange={(e) => setNewProjectDescription(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Start Date"
-              value={newProjectStartDate}
-              onChange={(date) => setNewProjectStartDate(date)}
-              slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+        {showForm && (
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6">Create New Project</Typography>
+            <TextField
+              label="Project Name"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              fullWidth
+              margin="normal"
             />
-            <DatePicker
-              label="End Date"
-              value={newProjectEndDate}
-              onChange={(date) => setNewProjectEndDate(date)}
-              slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+            <TextField
+              label="Description"
+              value={newProjectDescription}
+              onChange={(e) => setNewProjectDescription(e.target.value)}
+              fullWidth
+              margin="normal"
             />
-          </LocalizationProvider>
-          <TextField
-            label="Project Manager"
-            value={newProjectManager}
-            onChange={(e) => setNewProjectManager(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCreateProject}
-          >
-            Create Project
-          </Button>
-        </Box>
-        {selectedProject && (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Start Date"
+                value={newProjectStartDate}
+                onChange={(date) => setNewProjectStartDate(date)}
+                slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+              />
+              <DatePicker
+                label="End Date"
+                value={newProjectEndDate}
+                onChange={(date) => setNewProjectEndDate(date)}
+                slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+              />
+            </LocalizationProvider>
+            <TextField
+              label="Project Manager"
+              value={newProjectManager}
+              onChange={(e) => setNewProjectManager(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isFavorite}
+                  onChange={(e) => setIsFavorite(e.target.checked)}
+                  name="isFavorite"
+                />
+              }
+              label="Mark as Favorite"
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateProject}
+            >
+              Create Project
+            </Button>
+          </Box>
+        )}
+        {showProjects && (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Project ID</TableCell>
+                  <TableCell>Project Name</TableCell>
+                  <TableCell>Start Date</TableCell>
+                  <TableCell>End Date</TableCell>
+                  <TableCell>Project Manager</TableCell>
+                  <TableCell>Edit</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {projects.map((project) => (
+                  <TableRow key={project.id}>
+                    <TableCell>{project.id}</TableCell>
+                    <TableCell>{project.name}</TableCell>
+                    <TableCell>{project.startDate}</TableCell>
+                    <TableCell>{project.endDate}</TableCell>
+                    <TableCell>{project.manager}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleOpen(project)}
+                      >
+                        Edit
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+        {selectedProject && !showProjects && (
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
