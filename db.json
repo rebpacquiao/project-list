@@ -1,15 +1,6 @@
 {
   "projects": [
     {
-      "id": "1",
-      "name": "Project test  A sdfsdfsd",
-      "description": "Description A",
-      "startDate": "2023-01-10",
-      "endDate": "2023-06-01",
-      "manager": "John Doe",
-      "fav": false
-    },
-    {
       "id": "2",
       "name": "Project B",
       "description": "Description B",

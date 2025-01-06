@@ -45,6 +45,7 @@ const ProjectTable: React.FC = () => {
   const [favoriteProjects, setFavoriteProjects] = useState<Project[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [newProjectName, setNewProjectName] = useState<string>("");
   const [newProjectDescription, setNewProjectDescription] =
@@ -87,6 +88,38 @@ const ProjectTable: React.FC = () => {
   const handleClose = () => {
     setOpen(false);
     setSelectedProject(null);
+  };
+
+  const handleDeleteOpen = (project: Project) => {
+    setSelectedProject(project);
+    setDeleteOpen(true);
+  };
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+    setSelectedProject(null);
+  };
+
+  const handleDelete = () => {
+    if (selectedProject) {
+      const apiUrl = process.env.REACT_APP_API_URL;
+      axios
+        .delete(`${apiUrl}/projects/${selectedProject.id}`)
+        .then(() => {
+          setProjects((prevProjects) =>
+            prevProjects.filter((project) => project.id !== selectedProject.id)
+          );
+          setFavoriteProjects((prevFavoriteProjects) =>
+            prevFavoriteProjects.filter(
+              (project) => project.id !== selectedProject.id
+            )
+          );
+          handleDeleteClose();
+        })
+        .catch((error) => {
+          setError("Failed to delete project");
+        });
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,7 +244,7 @@ const ProjectTable: React.FC = () => {
                   onClick={() => handleMenuClick(text)}
                 >
                   <ButtonBase sx={{ width: "100%" }}>
-                    <ListItemText primary={text} />
+                    <ListItemText primary={text} sx={{ textAlign: "left" }} />
                   </ButtonBase>
                 </ListItem>
               )
@@ -227,18 +260,13 @@ const ProjectTable: React.FC = () => {
                   onClick={() => handleFavoriteProjectClick(project)}
                 >
                   <ButtonBase sx={{ width: "100%" }}>
-                    <ListItemText primary={project.name} />
+                    <ListItemText
+                      primary={project.name}
+                      sx={{ textAlign: "left" }}
+                    />
                   </ButtonBase>
                 </ListItem>
               ))}
-              <ListItem component="li" onClick={() => setShowForm(true)}>
-                <ButtonBase sx={{ width: "100%" }}>
-                  <ListItemText
-                    primary="Add New"
-                    sx={{ color: "primary.main" }}
-                  />
-                </ButtonBase>
-              </ListItem>
             </List>
           </Box>
         </Box>
@@ -308,40 +336,66 @@ const ProjectTable: React.FC = () => {
         ) : (
           <>
             {showProjects && (
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Project ID</TableCell>
-                      <TableCell>Project Name</TableCell>
-                      <TableCell>Start Date</TableCell>
-                      <TableCell>End Date</TableCell>
-                      <TableCell>Project Manager</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {projects.map((project) => (
-                      <TableRow key={project.id}>
-                        <TableCell>{project.id}</TableCell>
-                        <TableCell>{project.name}</TableCell>
-                        <TableCell>{project.startDate}</TableCell>
-                        <TableCell>{project.endDate}</TableCell>
-                        <TableCell>{project.manager}</TableCell>
-                        <TableCell>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleOpen(project)}
-                          >
-                            Edit
-                          </Button>
-                        </TableCell>
+              <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mb: 2,
+                  }}
+                >
+                  <Typography variant="h6">Project List</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => setShowForm(true)}
+                  >
+                    Add New
+                  </Button>
+                </Box>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Project ID</TableCell>
+                        <TableCell>Project Name</TableCell>
+                        <TableCell>Start Date</TableCell>
+                        <TableCell>End Date</TableCell>
+                        <TableCell>Project Manager</TableCell>
+                        <TableCell>Actions</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {projects.map((project) => (
+                        <TableRow key={project.id}>
+                          <TableCell>{project.id}</TableCell>
+                          <TableCell>{project.name}</TableCell>
+                          <TableCell>{project.startDate}</TableCell>
+                          <TableCell>{project.endDate}</TableCell>
+                          <TableCell>{project.manager}</TableCell>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() => handleOpen(project)}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() => handleDeleteOpen(project)}
+                              sx={{ ml: 1 }}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
             )}
             {selectedProject && !showProjects && (
               <TableContainer component={Paper}>
@@ -370,6 +424,14 @@ const ProjectTable: React.FC = () => {
                           onClick={() => handleOpen(selectedProject)}
                         >
                           Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleDeleteOpen(selectedProject)}
+                          sx={{ ml: 1 }}
+                        >
+                          Delete
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -441,6 +503,39 @@ const ProjectTable: React.FC = () => {
             />
             <Button variant="contained" color="primary" onClick={handleSave}>
               Save
+            </Button>
+          </Box>
+        </Modal>
+        <Modal open={deleteOpen} onClose={handleDeleteClose}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              textAlign: "center",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Are you sure you want to delete this project?
+            </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleDeleteClose}
+              sx={{ ml: 2 }}
+            >
+              Cancel
             </Button>
           </Box>
         </Modal>
