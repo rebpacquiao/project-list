@@ -352,7 +352,7 @@ const ProjectTable: React.FC = () => {
       >
         <Toolbar />
         {error && <div style={{ color: "red" }}>{error}</div>}
-        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+
         {showForm ? (
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6">Create New Project</Typography>
@@ -429,6 +429,10 @@ const ProjectTable: React.FC = () => {
                     Add New
                   </Button>
                 </Box>
+                <SearchBar
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                />
                 <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
                   <Table>
                     <TableHead>
