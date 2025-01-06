@@ -1,10 +1,14 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ProjectListPage from "../pages/ProjectTable";
 
 const App: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-500">test</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<ProjectListPage />} />
+      </Routes>
+    </Router>
   );
 };
 
