@@ -25,6 +25,8 @@ import {
   IconButton,
   CircularProgress,
   TablePagination,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -37,6 +39,8 @@ import StarIcon from "@mui/icons-material/Star";
 import FolderIcon from "@mui/icons-material/Folder";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
+import Badge from "@mui/material/Badge";
+import AddIcon from "@mui/icons-material/Add";
 
 interface Project {
   id: string;
@@ -75,12 +79,14 @@ const ProjectTable: React.FC = () => {
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const apiUrl = process.env.REACT_APP_API_URL;
     if (!apiUrl) {
       setError("API URL is not defined");
+      setSnackbarOpen(true);
       return;
     }
     axios
@@ -92,7 +98,10 @@ const ProjectTable: React.FC = () => {
         );
       })
       .catch((error) => {
-        setError("Failed to fetch projects");
+        setError(
+          "Failed to fetch projects. Please check your server connection."
+        );
+        setSnackbarOpen(true);
       });
   }, []);
 
@@ -154,6 +163,7 @@ const ProjectTable: React.FC = () => {
         })
         .catch((error) => {
           setError("Failed to delete project");
+          setSnackbarOpen(true);
         })
         .finally(() => {
           setLoading(false);
@@ -191,10 +201,19 @@ const ProjectTable: React.FC = () => {
               project.id === selectedProject.id ? response.data : project
             )
           );
+          setFavoriteProjects((prevFavoriteProjects) => {
+            const updatedFavorites = response.data.fav
+              ? [...prevFavoriteProjects, response.data]
+              : prevFavoriteProjects.filter(
+                  (project) => project.id !== response.data.id
+                );
+            return updatedFavorites;
+          });
           handleClose();
         })
         .catch((error) => {
           setError("Failed to update project");
+          setSnackbarOpen(true);
         })
         .finally(() => {
           setLoading(false);
@@ -232,6 +251,7 @@ const ProjectTable: React.FC = () => {
       })
       .catch((error) => {
         setError("Failed to create project");
+        setSnackbarOpen(true);
       });
   };
 
@@ -251,6 +271,19 @@ const ProjectTable: React.FC = () => {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleChangeFavorite = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (selectedProject) {
+      setSelectedProject({
+        ...selectedProject,
+        fav: e.target.checked,
+      });
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const drawer = (
@@ -374,8 +407,19 @@ const ProjectTable: React.FC = () => {
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
       >
         <Toolbar />
-        {error && <div style={{ color: "red" }}>{error}</div>}
-
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="error"
+            sx={{ width: "100%" }}
+          >
+            {error}
+          </Alert>
+        </Snackbar>
         {showForm ? (
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6">Create New Project</Typography>
@@ -448,7 +492,9 @@ const ProjectTable: React.FC = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => setShowForm(true)}
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
                   >
+                    <AddIcon />
                     Add New
                   </Button>
                 </Box>
@@ -489,7 +535,20 @@ const ProjectTable: React.FC = () => {
                           }}
                         >
                           <TableCell>{project.id}</TableCell>
-                          <TableCell>{project.name}</TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              {project.fav && (
+                                <StarIcon sx={{ color: "yellow" }} />
+                              )}
+                              {project.name}
+                            </Box>
+                          </TableCell>
                           <TableCell>{project.startDate}</TableCell>
                           <TableCell>{project.endDate}</TableCell>
                           <TableCell>{project.manager}</TableCell>
@@ -625,6 +684,16 @@ const ProjectTable: React.FC = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedProject?.fav || false}
+                  onChange={handleChangeFavorite}
+                  name="fav"
+                />
+              }
+              label="Mark as Favorite"
             />
             <Button variant="contained" color="primary" onClick={handleSave}>
               Update
