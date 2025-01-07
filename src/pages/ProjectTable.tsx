@@ -481,8 +481,13 @@ const ProjectTable: React.FC = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {currentProjects.map((project) => (
-                        <TableRow key={project.id}>
+                      {currentProjects.map((project, index) => (
+                        <TableRow
+                          key={project.id}
+                          sx={{
+                            bgcolor: index % 2 === 0 ? "grey.100" : "white",
+                          }}
+                        >
                           <TableCell>{project.id}</TableCell>
                           <TableCell>{project.name}</TableCell>
                           <TableCell>{project.startDate}</TableCell>
@@ -538,6 +543,9 @@ const ProjectTable: React.FC = () => {
                       <TableCell sx={{ bgcolor: "black", color: "white" }}>
                         Project Manager
                       </TableCell>
+                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
+                        Project Description
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -547,6 +555,7 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{selectedProject.startDate}</TableCell>
                       <TableCell>{selectedProject.endDate}</TableCell>
                       <TableCell>{selectedProject.manager}</TableCell>
+                      <TableCell>{selectedProject.description}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
