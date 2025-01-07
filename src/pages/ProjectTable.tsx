@@ -562,12 +562,15 @@ const ProjectTable: React.FC = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: 400,
+              width: 600,
               bgcolor: "background.paper",
               boxShadow: 24,
               p: 4,
             }}
           >
+            <Typography variant="h6" gutterBottom>
+              Edit Project
+            </Typography>
             <TextField
               label="Project Name"
               name="name"
@@ -615,7 +618,7 @@ const ProjectTable: React.FC = () => {
               margin="normal"
             />
             <Button variant="contained" color="primary" onClick={handleSave}>
-              Save
+              Update
             </Button>
             {loading && <CircularProgress size={24} sx={{ ml: 2 }} />}
           </Box>
@@ -635,6 +638,9 @@ const ProjectTable: React.FC = () => {
             }}
           >
             <Typography variant="h6" gutterBottom>
+              Delete Project
+            </Typography>
+            <Typography variant="body1" gutterBottom>
               Are you sure you want to delete this project?
             </Typography>
             <Button
