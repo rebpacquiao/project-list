@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
+  Box,
   Button,
   Modal,
-  Box,
   TextField,
   Drawer,
   List,
@@ -24,35 +17,30 @@ import {
   FormControlLabel,
   IconButton,
   CircularProgress,
-  TablePagination,
   Snackbar,
   Alert,
   Card,
   CardContent,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import axios from "axios";
 import MenuIcon from "@mui/icons-material/Menu";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import StarIcon from "@mui/icons-material/Star";
 import FolderIcon from "@mui/icons-material/Folder";
+import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import Badge from "@mui/material/Badge";
-import AddIcon from "@mui/icons-material/Add";
-
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  manager: string;
-  fav: boolean;
-}
+import ProjectList from "../components/ProjectList";
+import FavoriteProjects from "../components/FavoriteProjects";
+import { Project } from "../types";
 
 const drawerWidth = 240;
 
@@ -111,11 +99,6 @@ const ProjectTable: React.FC = () => {
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const currentProjects = filteredProjects.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -126,6 +109,7 @@ const ProjectTable: React.FC = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   const handleOpen = (project: Project) => {
     setSelectedProject(project);
     setOpen(true);
@@ -315,34 +299,10 @@ const ProjectTable: React.FC = () => {
           </ListItem>
         ))}
       </List>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="h6">
-          <StarIcon sx={{ mr: 1 }} />
-          Favorite Projects
-        </Typography>
-        <List>
-          {favoriteProjects.map((project) => (
-            <ListItem
-              key={project.id}
-              component="li"
-              onClick={() => handleFavoriteProjectClick(project)}
-              sx={{
-                color: "rgb(138, 153, 175)",
-                "&:hover": {
-                  color: "white",
-                },
-              }}
-            >
-              <ButtonBase sx={{ width: "100%" }}>
-                <ListItemText
-                  primary={project.name}
-                  sx={{ textAlign: "left" }}
-                />
-              </ButtonBase>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+      <FavoriteProjects
+        favoriteProjects={favoriteProjects}
+        handleFavoriteProjectClick={handleFavoriteProjectClick}
+      />
     </Box>
   );
 
@@ -510,84 +470,15 @@ const ProjectTable: React.FC = () => {
                   searchQuery={searchQuery}
                   setSearchQuery={setSearchQuery}
                 />
-                <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          Project ID
-                        </TableCell>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          Project Name
-                        </TableCell>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          Start Date
-                        </TableCell>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          End Date
-                        </TableCell>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          Project Manager
-                        </TableCell>
-                        <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                          Actions
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {currentProjects.map((project, index) => (
-                        <TableRow
-                          key={project.id}
-                          sx={{
-                            bgcolor: index % 2 === 0 ? "grey.100" : "white",
-                          }}
-                        >
-                          <TableCell>{project.id}</TableCell>
-                          <TableCell>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              {project.fav && (
-                                <StarIcon sx={{ color: "yellow" }} />
-                              )}
-                              {project.name}
-                            </Box>
-                          </TableCell>
-                          <TableCell>{project.startDate}</TableCell>
-                          <TableCell>{project.endDate}</TableCell>
-                          <TableCell>{project.manager}</TableCell>
-                          <TableCell>
-                            <IconButton
-                              color="primary"
-                              onClick={() => handleOpen(project)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton
-                              color="error"
-                              onClick={() => handleDeleteOpen(project)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                  <TablePagination
-                    component="div"
-                    count={filteredProjects.length}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={rowsPerPage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    rowsPerPageOptions={[5, 10, 25]}
-                  />
-                </TableContainer>
+                <ProjectList
+                  projects={filteredProjects}
+                  page={page}
+                  rowsPerPage={rowsPerPage}
+                  handleChangePage={handleChangePage}
+                  handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  handleOpen={handleOpen}
+                  handleDeleteOpen={handleDeleteOpen}
+                />
               </>
             )}
             {selectedProject && !showProjects && (
