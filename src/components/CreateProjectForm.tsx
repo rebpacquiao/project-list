@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -8,6 +8,8 @@ import {
   FormControlLabel,
   TextField,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -44,6 +46,25 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
   setIsFavorite,
   handleCreateProject,
 }) => {
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const handleSave = () => {
+    if (
+      !newProjectName ||
+      !newProjectStartDate ||
+      !newProjectEndDate ||
+      !newProjectManager
+    ) {
+      setValidationError("All fields are required.");
+      return;
+    }
+    handleCreateProject();
+  };
+
+  const handleSnackbarClose = () => {
+    setValidationError(null);
+  };
+
   return (
     <Card sx={{ mb: 3 }}>
       <CardContent>
@@ -97,14 +118,23 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
           }
           label="Mark as Favorite"
         />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateProject}
-        >
+        <Button variant="contained" color="primary" onClick={handleSave}>
           Create Project
         </Button>
       </CardContent>
+      <Snackbar
+        open={!!validationError}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {validationError}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };
