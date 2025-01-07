@@ -33,6 +33,8 @@ import axios from "axios";
 import MenuIcon from "@mui/icons-material/Menu";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import StarIcon from "@mui/icons-material/Star";
+import FolderIcon from "@mui/icons-material/Folder";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 
@@ -253,27 +255,48 @@ const ProjectTable: React.FC = () => {
 
   const drawer = (
     <Box sx={{ overflow: "auto" }}>
+      <Box sx={{ p: 2, color: "white", bgcolor: "#1c2434" }}>
+        <Typography sx={{ marginTop: 10 }} variant="h6">
+          Menu
+        </Typography>
+      </Box>
       <List>
-        {["Dashboard", "Projects"].map((text, index) => (
+        {["Projects"].map((text, index) => (
           <ListItem
             key={text}
             component="li"
             onClick={() => handleMenuClick(text)}
+            sx={{
+              color: "rgb(138, 153, 175)",
+              "&:hover": {
+                color: "white",
+              },
+            }}
           >
             <ButtonBase sx={{ width: "100%" }}>
+              {text === "Projects" ? <FolderIcon sx={{ mr: 1 }} /> : null}
               <ListItemText primary={text} sx={{ textAlign: "left" }} />
             </ButtonBase>
           </ListItem>
         ))}
       </List>
       <Box sx={{ p: 2 }}>
-        <Typography variant="h6">Favorite Projects</Typography>
+        <Typography variant="h6">
+          <StarIcon sx={{ mr: 1 }} />
+          Favorite Projects
+        </Typography>
         <List>
           {favoriteProjects.map((project) => (
             <ListItem
               key={project.id}
               component="li"
               onClick={() => handleFavoriteProjectClick(project)}
+              sx={{
+                color: "rgb(138, 153, 175)",
+                "&:hover": {
+                  color: "white",
+                },
+              }}
             >
               <ButtonBase sx={{ width: "100%" }}>
                 <ListItemText
