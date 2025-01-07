@@ -27,6 +27,8 @@ import {
   TablePagination,
   Snackbar,
   Alert,
+  Card,
+  CardContent,
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -237,7 +239,7 @@ const ProjectTable: React.FC = () => {
     axios
       .post(`${apiUrl}/projects`, newProject)
       .then((response) => {
-        setProjects([...projects, response.data]);
+        setProjects([response.data, ...projects]);
         if (isFavorite) {
           setFavoriteProjects([...favoriteProjects, response.data]);
         }
@@ -421,61 +423,67 @@ const ProjectTable: React.FC = () => {
           </Alert>
         </Snackbar>
         {showForm ? (
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6">Create New Project</Typography>
-            <TextField
-              label="Project Name"
-              value={newProjectName}
-              onChange={(e) => setNewProjectName(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Description"
-              value={newProjectDescription}
-              onChange={(e) => setNewProjectDescription(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Start Date"
-                value={newProjectStartDate}
-                onChange={(date) => setNewProjectStartDate(date)}
-                slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Typography variant="h6">Create New Project</Typography>
+              <TextField
+                label="Project Name"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+                fullWidth
+                margin="normal"
               />
-              <DatePicker
-                label="End Date"
-                value={newProjectEndDate}
-                onChange={(date) => setNewProjectEndDate(date)}
-                slotProps={{ textField: { fullWidth: true, margin: "normal" } }}
+              <TextField
+                label="Description"
+                value={newProjectDescription}
+                onChange={(e) => setNewProjectDescription(e.target.value)}
+                fullWidth
+                margin="normal"
               />
-            </LocalizationProvider>
-            <TextField
-              label="Project Manager"
-              value={newProjectManager}
-              onChange={(e) => setNewProjectManager(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isFavorite}
-                  onChange={(e) => setIsFavorite(e.target.checked)}
-                  name="isFavorite"
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={newProjectStartDate}
+                  onChange={(date) => setNewProjectStartDate(date)}
+                  slotProps={{
+                    textField: { fullWidth: true, margin: "normal" },
+                  }}
                 />
-              }
-              label="Mark as Favorite"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCreateProject}
-            >
-              Create Project
-            </Button>
-          </Box>
+                <DatePicker
+                  label="End Date"
+                  value={newProjectEndDate}
+                  onChange={(date) => setNewProjectEndDate(date)}
+                  slotProps={{
+                    textField: { fullWidth: true, margin: "normal" },
+                  }}
+                />
+              </LocalizationProvider>
+              <TextField
+                label="Project Manager"
+                value={newProjectManager}
+                onChange={(e) => setNewProjectManager(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isFavorite}
+                    onChange={(e) => setIsFavorite(e.target.checked)}
+                    name="isFavorite"
+                  />
+                }
+                label="Mark as Favorite"
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleCreateProject}
+              >
+                Create Project
+              </Button>
+            </CardContent>
+          </Card>
         ) : (
           <>
             {showProjects && (

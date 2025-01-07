@@ -125,6 +125,24 @@
       "endDate": "2025-01-06",
       "manager": "no available project manager",
       "fav": true
+    },
+    {
+      "id": "1736219659648",
+      "name": "New Project",
+      "description": "this is new project",
+      "startDate": "2025-01-07",
+      "endDate": "2025-01-07",
+      "manager": "REb",
+      "fav": false
+    },
+    {
+      "id": "1736219793392",
+      "name": "New Project first",
+      "description": "sfsd",
+      "startDate": "2025-01-07",
+      "endDate": "2025-01-07",
+      "manager": "reb",
+      "fav": true
     }
   ]
 }

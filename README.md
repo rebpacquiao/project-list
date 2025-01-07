@@ -48,7 +48,8 @@ This will launch the application in your default web browser at `http://localhos
 open new visual studio window then type this command to run the server side
 
 ```
- json-server --watch db.json --port 3001
+ - cd my-react-app
+ - json-server --watch db.json --port 3001
 ```
 
 ### Building for Production
