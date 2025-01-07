@@ -19,8 +19,6 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
-  Card,
-  CardContent,
   TableContainer,
   Paper,
   Table,
@@ -40,6 +38,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import ProjectList from "../components/ProjectList";
 import FavoriteProjects from "../components/FavoriteProjects";
+import CreateProjectForm from "../components/CreateProjectForm";
 import { Project } from "../types";
 
 const drawerWidth = 240;
@@ -383,67 +382,21 @@ const ProjectTable: React.FC = () => {
           </Alert>
         </Snackbar>
         {showForm ? (
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <Typography variant="h6">Create New Project</Typography>
-              <TextField
-                label="Project Name"
-                value={newProjectName}
-                onChange={(e) => setNewProjectName(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Description"
-                value={newProjectDescription}
-                onChange={(e) => setNewProjectDescription(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Start Date"
-                  value={newProjectStartDate}
-                  onChange={(date) => setNewProjectStartDate(date)}
-                  slotProps={{
-                    textField: { fullWidth: true, margin: "normal" },
-                  }}
-                />
-                <DatePicker
-                  label="End Date"
-                  value={newProjectEndDate}
-                  onChange={(date) => setNewProjectEndDate(date)}
-                  slotProps={{
-                    textField: { fullWidth: true, margin: "normal" },
-                  }}
-                />
-              </LocalizationProvider>
-              <TextField
-                label="Project Manager"
-                value={newProjectManager}
-                onChange={(e) => setNewProjectManager(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isFavorite}
-                    onChange={(e) => setIsFavorite(e.target.checked)}
-                    name="isFavorite"
-                  />
-                }
-                label="Mark as Favorite"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleCreateProject}
-              >
-                Create Project
-              </Button>
-            </CardContent>
-          </Card>
+          <CreateProjectForm
+            newProjectName={newProjectName}
+            setNewProjectName={setNewProjectName}
+            newProjectDescription={newProjectDescription}
+            setNewProjectDescription={setNewProjectDescription}
+            newProjectStartDate={newProjectStartDate}
+            setNewProjectStartDate={setNewProjectStartDate}
+            newProjectEndDate={newProjectEndDate}
+            setNewProjectEndDate={setNewProjectEndDate}
+            newProjectManager={newProjectManager}
+            setNewProjectManager={setNewProjectManager}
+            isFavorite={isFavorite}
+            setIsFavorite={setIsFavorite}
+            handleCreateProject={handleCreateProject}
+          />
         ) : (
           <>
             {showProjects && (
