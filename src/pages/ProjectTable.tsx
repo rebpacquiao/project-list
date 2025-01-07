@@ -515,9 +515,6 @@ const ProjectTable: React.FC = () => {
                       <TableCell sx={{ bgcolor: "black", color: "white" }}>
                         Project Manager
                       </TableCell>
-                      <TableCell sx={{ bgcolor: "black", color: "white" }}>
-                        Edit
-                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -527,20 +524,6 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{selectedProject.startDate}</TableCell>
                       <TableCell>{selectedProject.endDate}</TableCell>
                       <TableCell>{selectedProject.manager}</TableCell>
-                      <TableCell>
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleOpen(selectedProject)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDeleteOpen(selectedProject)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>

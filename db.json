@@ -1,15 +1,6 @@
 {
   "projects": [
     {
-      "id": "2",
-      "name": "Project B test",
-      "description": "Description B",
-      "startDate": "2023-02-01",
-      "endDate": "2023-07-01",
-      "manager": "Jane Smith",
-      "fav": false
-    },
-    {
       "id": "3",
       "name": "Project C",
       "description": "Description C",
@@ -47,7 +38,7 @@
     },
     {
       "id": "7",
-      "name": "Project G",
+      "name": "Project G test",
       "description": "Description G",
       "startDate": "2023-07-01",
       "endDate": "2023-12-01",
@@ -119,11 +110,20 @@
     },
     {
       "id": "1736175318620",
-      "name": "Test Project Reb",
+      "name": "Test",
       "description": "this is demo description",
       "startDate": "2025-01-06",
       "endDate": "2025-01-06",
       "manager": "No Project Manager",
+      "fav": true
+    },
+    {
+      "id": "1736176479366",
+      "name": "New Project",
+      "description": "None",
+      "startDate": "2025-01-06",
+      "endDate": "2025-01-06",
+      "manager": "no available project manager",
       "fav": true
     }
   ]
