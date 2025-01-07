@@ -70,7 +70,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
       <CardContent>
         <Typography variant="h6">Create New Project</Typography>
         <TextField
-          label="Project Name"
+          label="Project Name *"
           value={newProjectName}
           onChange={(e) => setNewProjectName(e.target.value)}
           fullWidth
@@ -85,7 +85,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
         />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
-            label="Start Date"
+            label="Start Date *"
             value={newProjectStartDate}
             onChange={(date) => setNewProjectStartDate(date)}
             slotProps={{
@@ -93,7 +93,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
             }}
           />
           <DatePicker
-            label="End Date"
+            label="End Date *"
             value={newProjectEndDate}
             onChange={(date) => setNewProjectEndDate(date)}
             slotProps={{
@@ -102,7 +102,7 @@ const CreateProjectForm: React.FC<CreateProjectFormProps> = ({
           />
         </LocalizationProvider>
         <TextField
-          label="Project Manager"
+          label="Project Manager *"
           value={newProjectManager}
           onChange={(e) => setNewProjectManager(e.target.value)}
           fullWidth
